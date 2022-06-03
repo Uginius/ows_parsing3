@@ -22,12 +22,7 @@ def write_html(src, filename):
 
 
 def get_last_dir():
-    pages_dir_from_os = os.listdir('htmls')
-    dir_date_template = r'\d{2}-\d{2}-202\d'
-    loaded_dirs = []
-    for el in pages_dir_from_os:
-        check_dir = re.findall(dir_date_template, el)
-        if check_dir:
-            loaded_dirs.append(datetime.strptime(el, '%d-%m-%Y'))
-    final_dir = sorted(loaded_dirs)[-1].strftime('%d-%m-%Y')
-    return final_dir
+    ld = [datetime.strptime(el, '%d-%m-%Y') for el in os.listdir('htmls/') if re.findall(r'\d{2}-\d{2}-202\d', el)]
+    last_dir = f"htmls/{sorted(ld)[-1].strftime('%d-%m-%Y')}"
+    result_dirs = re.findall(r'\w{2}_html_files', str(os.listdir(last_dir)))
+    return {d[:2]: f'{last_dir}/{d}' for d in result_dirs}
