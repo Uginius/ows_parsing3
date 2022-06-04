@@ -1,5 +1,5 @@
 from page_getter import GetterOz, GetterWb
-from parsers import PagesParser, ParserWb, ParserOz
+from parsers import ParserWb, ParserOz
 from utilites import time_track, get_last_dir
 
 
