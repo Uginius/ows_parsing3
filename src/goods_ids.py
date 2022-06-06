@@ -2189,7 +2189,7 @@ rosel_products = {
         'id WB': 10309332,
         'Status OZ': 'регуляр',
         'Status WB': None,
-        'url OZ': 'https://www.ozon.ru/product/futbolka-printfest-470313623/',
+        'url OZ': 'https://www.ozon.ru/product/fonar-kempingovyy-pushlayt-svetodiodnyy-foton-s-500-162749727',
         'url WB': 'https://www.wildberries.ru/catalog/10309332/detail.aspx'},
     23597: {
         'Name': 'Фонарь рабочий аккумуляторный светодиодный "ФОТОН" WLA-300',
