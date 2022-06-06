@@ -1,3 +1,6 @@
+import math
+
+
 class Product:
     def __init__(self):
         self.rosel_id = None
@@ -8,9 +11,6 @@ class Product:
         self.rating = 0
         self.quantity = None
         self.votes = {'5*': 0, '4*': 0, '3*': 0, '2*': 0, '1*': 0}
-
-    def no_url(self):
-        self.__init__(self.shop_id)
 
     def out_items(self):
         return [self.shop_id, self.name, self.url, self.price]
@@ -30,7 +30,16 @@ class Product:
         }
 
     def xlsx_line(self):
+        r_id = self.rosel_id
+        rating = self.rating
         target = 4
-        need_votes = 0
-        votes = list(self.votes.values())
-        return [self.rosel_id, self.name, self.rating, target, need_votes, self.quantity, *votes, self.url]
+        votes = self.votes
+        quantity = int(self.quantity) if self.quantity else None
+        if rating >= target:
+            need_votes = 'Все ОК'
+        else:
+            if rating:
+                need_votes = math.ceil((quantity * (target - rating)) / (5 - target))
+            else:
+                need_votes = 2
+        return [r_id, self.name, rating, target, need_votes, quantity, *list(votes.values()), self.status, self.url]
