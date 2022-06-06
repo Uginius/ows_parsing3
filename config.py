@@ -8,12 +8,12 @@ selenium_arguments = [
 
 match sys.platform:
     case 'linux':
-        browser_path = 'selenium_drivers/'
-    case 'darwin': # MAC
-        browser_path = 'selenium_drivers/chromedriver_mac'
+        browser_path = 'drivers/'
+    case 'darwin':
+        browser_path = 'drivers/chromedriver'
     case 'win32':
         browser_path = 'drivers/chromedriver.exe'
     case _:
         print("ERROR: can't found selenium driver")
 
-wait_time = 3
+wait_time = 5

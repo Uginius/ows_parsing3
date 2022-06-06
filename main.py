@@ -20,14 +20,18 @@ def get_html_pages():
 
 @time_track
 def parse_pages():
-    pl = {'oz': ParserOz, 'wb': ParserWb}
-    parsers = [pl[platform](directory) for platform, directory in get_last_dir().items()]
-    for par in parsers:
+    last_dir = get_last_dir()
+    pl = []
+    if oz_run:
+        pl.append(ParserOz(last_dir['oz']))
+    if wb_run:
+        pl.append(ParserWb(last_dir['wb']))
+    for par in pl:
         par.run()
 
 
 if __name__ == '__main__':
-    oz_run = True
+    oz_run = False
     wb_run = True
     sm_run = False
     # get_html_pages()

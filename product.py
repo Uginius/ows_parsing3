@@ -5,7 +5,7 @@ class Product:
         self.name, self.url = 'name missing', 'url missing'
         self.status = None
         self.price = 0
-        self.rating = None
+        self.rating = 0
         self.quantity = None
         self.votes = {'5*': 0, '4*': 0, '3*': 0, '2*': 0, '1*': 0}
 
@@ -28,3 +28,9 @@ class Product:
             'url': self.url,
             'Статус': self.status,
         }
+
+    def xlsx_line(self):
+        target = 4
+        need_votes = 0
+        votes = list(self.votes.values())
+        return [self.rosel_id, self.name, self.rating, target, need_votes, self.quantity, *votes, self.url]
