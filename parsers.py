@@ -1,6 +1,8 @@
 import os
 from bs4 import BeautifulSoup
 from openpyxl import Workbook
+from openpyxl.styles import Alignment
+
 from product import Product
 from src.goods_ids import rosel_products
 
@@ -22,7 +24,7 @@ class PagesParser:
         for n, f in enumerate(files):
             filename = f"{self.dir}/{f}"
             self.html_file = f
-            print(f'{platform} - №{n + 1:03} - Open {filename}')
+            # print(f'{platform} - №{n + 1:03} - Open {filename}')
             with open(filename, 'r', encoding='utf8') as read_file:
                 self.set_product(int(f.split('_')[-1].split('.')[0]))
                 self.soup = BeautifulSoup(read_file, 'lxml')
@@ -50,12 +52,27 @@ class PagesParser:
         self.workbook.active.append(write_data)
 
     def initiate_workbook(self):
-        titles = ['ID', 'Наименование', 'Рейтинг', 'Цель из Ф4', 'Необходимое кол-во отзывов с 5*', 'Количество',
-                  '5*', '4*', '3*', '2*', '1*', 'url']
+        titles = ['ID', 'Shop ID', 'Наименование', 'Рейтинг', 'Цель из Ф4', 'Необходимо отзывов с 5*', 'Количество',
+                  '5*', '4*', '3*', '2*', '1*', 'Статус', 'Price', 'url']
         self.workbook.create_sheet(self.platform)
         if 'Sheet' in self.workbook.sheetnames:
             self.workbook.remove(self.workbook['Sheet'])
         self.workbook.active.append(titles)
+        self.set_workbook_dimensions()
+
+    def set_workbook_dimensions(self):
+        sw = self.workbook.active
+        sw.column_dimensions['A'].width = 6
+        sw.column_dimensions['B'].width = 18
+        sw.column_dimensions['C'].width = 30
+        mark_value = 6
+        sw.column_dimensions['E'].width = mark_value
+        sw.column_dimensions['E'].width = mark_value
+        sw.column_dimensions['H'].width = mark_value
+        sw.column_dimensions['I'].width = mark_value
+        sw.column_dimensions['J'].width = mark_value
+        sw.column_dimensions['K'].width = mark_value
+        sw.column_dimensions['L'].width = mark_value
 
 
 class ParserOz(PagesParser):
@@ -69,16 +86,33 @@ class ParserOz(PagesParser):
         try:
             reviews_block = soup.find('div', attrs={"data-widget": "webReviewProductScore"}).a['title']
             cp.quantity = int(reviews_block.split()[0])
-            votes_stars_parent = soup.find(text='5 звезд').parent.parent
-            cp.rating = float(votes_stars_parent.parent.parent.find('span').text.split()[0])
-            votes_class = votes_stars_parent.find_all('div')[4]['class'][0]
-            votes = [vote.text for vote in soup.find_all('div', class_=votes_class)]
-            cp.votes = dict(zip(['5*', '4*', '3*', '2*', '1*'], votes))
-        except Exception as ex:
+        except TypeError:
             pass
+        if cp.quantity:
+            try:
+                votes_stars_parent = soup.find(text='5 звезд').parent.parent
+                cp.rating = float(votes_stars_parent.parent.parent.find('span').text.split()[0])
+                votes_class = votes_stars_parent.find_all('div')[4]['class'][0]
+                votes = [int(vote.text) for vote in soup.find_all('div', class_=votes_class)]
+                cp.votes = dict(zip(['5*', '4*', '3*', '2*', '1*'], votes))
+            except Exception as ex:
+                print(f'{self.html_file} - {cp.shop_id}: rating error - {ex}')
         delivery = soup.find('h2', text='Информация о доставке')
         if delivery:
             cp.status = delivery.parent.find(text='В наличии')
+        self.get_price()
+
+    def get_price(self):
+        try:
+            prb = self.soup.find('div', attrs={"data-widget": "webPrice"}).div.find_all('div', recursive=False)[1]
+            self.cp.price = prb.div.span.text.strip()
+            return
+        except Exception as ex:
+            try:
+                prb = self.soup.find('div', attrs={"data-widget": "webPrice"}).div.div.div
+                self.cp.price = prb.span.text.strip()
+            except Exception as ex:
+                print(f'{self.html_file} - {self.cp.shop_id}: price error - {ex}')
 
 
 class ParserWb(PagesParser):

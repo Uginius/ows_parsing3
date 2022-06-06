@@ -30,7 +30,6 @@ class Product:
         }
 
     def xlsx_line(self):
-        r_id = self.rosel_id
         rating = self.rating
         target = 4
         votes = self.votes
@@ -42,4 +41,6 @@ class Product:
                 need_votes = math.ceil((quantity * (target - rating)) / (5 - target))
             else:
                 need_votes = 2
-        return [r_id, self.name, rating, target, need_votes, quantity, *list(votes.values()), self.status, self.url]
+        return [self.rosel_id, self.shop_id, self.name,
+                rating, target, need_votes, quantity,
+                *list(votes.values()), self.status, self.price, self.url]

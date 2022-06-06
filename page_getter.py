@@ -1,6 +1,7 @@
 import os
 import time
 from datetime import datetime
+from random import randint
 from threading import Thread
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
@@ -87,8 +88,9 @@ class GetterOz(PageGetter):
         #         break
         #     last_height = new_height
         for _ in range(3):
-            time.sleep(3)
-            self.browser.execute_script("window.scrollBy(0, 1200)")
+            sleep_time = randint(2, 5)
+            time.sleep(sleep_time)
+            self.browser.execute_script("window.scrollBy(0, 1500)")
 
 
 class GetterWb(PageGetter):
