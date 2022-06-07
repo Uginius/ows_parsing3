@@ -24,7 +24,7 @@ class PagesParser:
         for n, f in enumerate(files):
             filename = f"{self.dir}/{f}"
             self.html_file = f
-            # print(f'{platform} - №{n + 1:03} - Open {filename}')
+            print(f'{platform} - №{n + 1:03} - Open {filename}')
             with open(filename, 'r', encoding='utf8') as read_file:
                 self.set_product(int(f.split('_')[-1].split('.')[0]))
                 self.soup = BeautifulSoup(read_file, 'lxml')
@@ -81,6 +81,35 @@ class ParserOz(PagesParser):
         self.platform = 'oz'
 
     def parse(self):
+        self.get_reviews()
+        self.get_status()
+        self.get_price()
+
+    def get_price(self):
+        try:
+            prb = self.soup.find('div', attrs={"data-widget": "webPrice"}).div.find_all('div', recursive=False)[1]
+            self.cp.price = prb.div.span.text.strip()
+            return
+        except Exception as ex:
+            try:
+                prb = self.soup.find('div', attrs={"data-widget": "webPrice"}).div.div.div
+                self.cp.price = prb.span.text.strip()
+            except Exception as ex:
+                print(f'{self.html_file} - {self.cp.shop_id}: price error - {ex}')
+
+    def get_status(self):
+        cp = self.cp
+        soup = self.soup
+        # delivery = soup.find('h2', text='Информация о доставке')
+        # if delivery:
+        #     cp.status = delivery.parent.find(text='В наличии')
+        #     return
+        add_to_cart = soup.find('div', attrs={"data-widget": "webAddToCart"}).text
+        if 'Добавить в корзину' in add_to_cart:
+            cp.status = 'В наличии'
+        pass
+
+    def get_reviews(self):
         cp = self.cp
         soup = self.soup
         try:
@@ -97,22 +126,6 @@ class ParserOz(PagesParser):
                 cp.votes = dict(zip(['5*', '4*', '3*', '2*', '1*'], votes))
             except Exception as ex:
                 print(f'{self.html_file} - {cp.shop_id}: rating error - {ex}')
-        delivery = soup.find('h2', text='Информация о доставке')
-        if delivery:
-            cp.status = delivery.parent.find(text='В наличии')
-        self.get_price()
-
-    def get_price(self):
-        try:
-            prb = self.soup.find('div', attrs={"data-widget": "webPrice"}).div.find_all('div', recursive=False)[1]
-            self.cp.price = prb.div.span.text.strip()
-            return
-        except Exception as ex:
-            try:
-                prb = self.soup.find('div', attrs={"data-widget": "webPrice"}).div.div.div
-                self.cp.price = prb.span.text.strip()
-            except Exception as ex:
-                print(f'{self.html_file} - {self.cp.shop_id}: price error - {ex}')
 
 
 class ParserWb(PagesParser):

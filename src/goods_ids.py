@@ -2509,7 +2509,7 @@ rosel_products = {
         'id WB': 28902713,
         'Status OZ': 'регуляр',
         'Status WB': 'архив',
-        'url OZ': 'https://www.ozon.ru/product/super-lenta-50-25-kontakt-dom-seraya-art-23725-art-771234-526547919/',
+        'url OZ': 'https://www.ozon.ru/product/universalnaya-kleykaya-super-lenta-kontakt-dom-25-m-seraya-tpl-armirovannaya-264803323/',
         'url WB': 'https://www.wildberries.ru/catalog/28902713/detail.aspx'},
     23726: {
         'Name': 'Универсальная клеящая супер-лента "КОНТАКТ ДОМ", 50 м, серая',

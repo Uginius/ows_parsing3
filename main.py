@@ -31,7 +31,7 @@ def parse_pages():
 
 
 if __name__ == '__main__':
-    oz_run = False
+    oz_run = True
     wb_run = True
     sm_run = False
     # get_html_pages()
