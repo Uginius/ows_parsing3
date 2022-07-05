@@ -27,3 +27,8 @@ def get_last_dir():
     last_dir = f"htmls/{sorted(ld)[-1].strftime(date_pattern)}"
     result_dirs = re.findall(r'\w{2}_html_files', str(os.listdir(last_dir)))
     return {d[:2]: f'{last_dir}/{d}' for d in result_dirs}
+
+
+def check_dir(directory):
+    if not os.path.exists(directory):
+        os.makedirs(directory)

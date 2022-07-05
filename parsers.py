@@ -24,7 +24,7 @@ class PagesParser:
         for n, f in enumerate(files):
             filename = f"{self.dir}/{f}"
             self.html_file = f
-            print(f'{platform} - №{n + 1:03} - Open {filename}')
+            # print(f'{platform} - №{n + 1:03} - Open {filename}')
             with open(filename, 'r', encoding='utf8') as read_file:
                 self.set_product(int(f.split('_')[-1].split('.')[0]))
                 self.soup = BeautifulSoup(read_file, 'lxml')
@@ -81,21 +81,26 @@ class ParserOz(PagesParser):
         self.platform = 'oz'
 
     def parse(self):
+        if self.check_error_page():
+            return 
         self.get_reviews()
         self.get_status()
         self.get_price()
 
     def get_price(self):
+        price_block = self.soup.find('div', attrs={"data-widget": "webPrice"})
         try:
-            prb = self.soup.find('div', attrs={"data-widget": "webPrice"}).div.find_all('div', recursive=False)[1]
+            prb = price_block.find('div', attrs={"slot": "content"})
             self.cp.price = prb.div.span.text.strip()
             return
         except Exception as ex:
             try:
-                prb = self.soup.find('div', attrs={"data-widget": "webPrice"}).div.div.div
+                prb = price_block.div.div.div
                 self.cp.price = prb.span.text.strip()
+                pass
             except Exception as ex:
                 print(f'{self.html_file} - {self.cp.shop_id}: price error - {ex}')
+                pass
 
     def get_status(self):
         cp = self.cp
@@ -104,19 +109,21 @@ class ParserOz(PagesParser):
         # if delivery:
         #     cp.status = delivery.parent.find(text='В наличии')
         #     return
-        add_to_cart = soup.find('div', attrs={"data-widget": "webAddToCart"}).text
-        if 'Добавить в корзину' in add_to_cart:
-            cp.status = 'В наличии'
-        pass
+        add_to_cart = soup.find('div', attrs={"data-widget": "webAddToCart"})
+        if add_to_cart:
+            if 'Добавить в корзину' in add_to_cart.text:
+                cp.status = 'В наличии'
+            else:
+                cp.status = 'Нет в наличии'
 
     def get_reviews(self):
         cp = self.cp
         soup = self.soup
         try:
-            reviews_block = soup.find('div', attrs={"data-widget": "webReviewProductScore"}).a['title']
-            cp.quantity = int(reviews_block.split()[0])
-        except TypeError:
-            pass
+            reviews_block = soup.find('div', attrs={"data-widget": "webReviewProductScore"})
+            cp.quantity = int(reviews_block.a['title'].split()[0])
+        except Exception:
+            reviews_block = None
         if cp.quantity:
             try:
                 votes_stars_parent = soup.find(text='5 звезд').parent.parent
@@ -125,7 +132,19 @@ class ParserOz(PagesParser):
                 votes = [int(vote.text) for vote in soup.find_all('div', class_=votes_class)]
                 cp.votes = dict(zip(['5*', '4*', '3*', '2*', '1*'], votes))
             except Exception as ex:
-                print(f'{self.html_file} - {cp.shop_id}: rating error - {ex}')
+                if reviews_block:
+                    stars_block = reviews_block.div.div.div.div
+                    try:
+                        stars = float(stars_block.find_all('div')[-1]['style'].split(':')[-1].split('%')[0])
+                        self.cp.rating = round((stars * 5) / 100, 2)
+                    except Exception as ex:
+                        print(f'{self.html_file} - {self.cp.shop_id}: rating error - {ex}')
+                else:
+                    print(f'{self.html_file} - {cp.shop_id}: review block error - {ex}')
+
+    def check_error_page(self):
+        h2 = self.soup.find('h2').text
+        return True if 'Произошла ошибка' in h2 else False
 
 
 class ParserWb(PagesParser):
