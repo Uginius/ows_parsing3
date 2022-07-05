@@ -5,7 +5,7 @@ from random import randint
 from threading import Thread
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
-from config import selenium_arguments, browser_path
+from config import selenium_arguments, browser_path, date_pattern
 from src.goods_ids import oz_links, wb_links
 from utilites import write_html
 
@@ -13,7 +13,7 @@ from utilites import write_html
 class PageGetter(Thread):
     def __init__(self):
         super().__init__()
-        self.date = datetime.now().strftime("%d-%m-%Y")
+        self.date = datetime.now().strftime(date_pattern)
         self.html_dir = None
         self.platform = None
         self.links = {}
@@ -94,10 +94,8 @@ class GetterOz(PageGetter):
                 break
             last_height = new_height
         for i in range(3):
-            sleep_time = randint(2, 5)
-            time.sleep(sleep_time)
-            value = (i + 1) * 1500
-            self.browser.execute_script(f"window.scrollBy(0, {value})")
+            time.sleep(sl_time)
+            self.browser.execute_script(f"window.scrollBy(0, {(i + 1) * 1500})")
 
 
 class GetterWb(PageGetter):

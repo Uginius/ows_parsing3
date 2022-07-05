@@ -1,5 +1,5 @@
 import sys
-
+import datetime
 
 wait_time = 5
 
@@ -20,3 +20,7 @@ match sys.platform:
 selenium_arguments = [f'user-agent={user_agent}', '--disable-blink-features=AutomationControlled']
 req_headers = {'accept': '*/*', 'accept-encoding': 'gzip, deflate, br',
                'accept-language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7', 'user-agent': user_agent}
+
+date_pattern = "%Y-%m-%d"
+today = datetime.datetime.now().strftime(date_pattern)
+dir_date_template = r'202\d-\d{2}-\d{2}'

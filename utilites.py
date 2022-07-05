@@ -3,6 +3,8 @@ import re
 import time
 from datetime import datetime
 
+from config import date_pattern, dir_date_template
+
 
 def time_track(func):
     def surrogate(*args, **kwargs):
@@ -22,7 +24,7 @@ def write_html(src, filename):
 
 
 def get_last_dir():
-    ld = [datetime.strptime(el, '%d-%m-%Y') for el in os.listdir('htmls/') if re.findall(r'\d{2}-\d{2}-202\d', el)]
-    last_dir = f"htmls/{sorted(ld)[-1].strftime('%d-%m-%Y')}"
+    ld = [datetime.strptime(el, date_pattern) for el in os.listdir('htmls/') if re.findall(dir_date_template, el)]
+    last_dir = f"htmls/{sorted(ld)[-1].strftime(date_pattern)}"
     result_dirs = re.findall(r'\w{2}_html_files', str(os.listdir(last_dir)))
     return {d[:2]: f'{last_dir}/{d}' for d in result_dirs}
