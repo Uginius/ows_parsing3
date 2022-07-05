@@ -32,6 +32,7 @@ def parse_pages():
         par.run()
 
 
+@time_track
 def get_json_data():
     json_getters = {'oz': OzJsonGetter, 'wb': WbJsonGetter, 'sm': None}
     active_platforms = [getter() for name, getter in json_getters.items() if use_platforms[name]]
@@ -45,5 +46,5 @@ if __name__ == '__main__':
     # sm_run = False
     # get_html_pages()
     # parse_pages()
-    use_platforms = {'oz': True, 'wb': True, 'sm': False}
+    use_platforms = {'oz': False, 'wb': True, 'sm': False}
     get_json_data()

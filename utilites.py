@@ -17,9 +17,14 @@ def time_track(func):
     return surrogate
 
 
-def write_html(src, filename):
+def write_utf8_file(src, filename):
     with open(filename, 'w', encoding='utf8') as write_file:
         write_file.write(src)
+
+
+def append_utf8_file(src, filename):
+    with open(filename, 'a', encoding='utf8') as append_file:
+        append_file.write(src)
 
 
 def get_last_dir():

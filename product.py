@@ -44,3 +44,27 @@ class Product:
         return [self.rosel_id, self.shop_id, self.name,
                 rating, target, need_votes, quantity,
                 *list(votes.values()), self.status, self.price, self.url]
+
+
+class JsonProduct:
+    def __init__(self):
+        self.rosel_id = None
+        self.shop_id = None
+        self.name, self.url = 'name missing', 'url missing'
+        self.status = None
+        self.price = None
+        self.rating = None
+        self.quantity = None
+
+    def data_out(self):
+        # return [self.rosel_id, self.shop_id, self.name, self.rating, self.quantity, self.price]
+        return {
+            self.rosel_id: {
+                'Артикул МП': self.shop_id,
+                'Наименование': self.name,
+                'Рейтинг': self.rating,
+                'Количество отзывов': self.quantity,
+                'Price': self.price,
+                'url': self.url,
+            }
+        }

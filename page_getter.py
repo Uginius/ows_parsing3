@@ -7,7 +7,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from config import selenium_arguments, browser_path, date_pattern
 from src.goods_ids import oz_links, wb_links
-from utilites import write_html
+from utilites import write_utf8_file
 
 
 class PageGetter(Thread):
@@ -48,7 +48,7 @@ class PageGetter(Thread):
             self.scroll_up()
             self.scroll_down()
             data = self.browser.page_source
-            write_html(data, f'{self.html_dir}N{order:04}_{self.platform}_{art}.html')
+            write_utf8_file(data, f'{self.html_dir}N{order:04}_{self.platform}_{art}.html')
 
     def scroll_up(self):
         self.browser.execute_script(f"window.scrollTo(0, 0);")
