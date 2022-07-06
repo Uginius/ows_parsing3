@@ -34,6 +34,6 @@ def get_last_dir():
     return {d[:2]: f'{last_dir}/{d}' for d in result_dirs}
 
 
-def check_dir(directory):
-    if not os.path.exists(directory):
-        os.makedirs(directory)
+def check_dir(folder):
+    if not os.path.exists(folder):
+        os.makedirs(folder)

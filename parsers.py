@@ -82,7 +82,7 @@ class ParserOz(PagesParser):
 
     def parse(self):
         if self.check_error_page():
-            return 
+            return
         self.get_reviews()
         self.get_status()
         self.get_price()
@@ -97,10 +97,8 @@ class ParserOz(PagesParser):
             try:
                 prb = price_block.div.div.div
                 self.cp.price = prb.span.text.strip()
-                pass
             except Exception as ex:
                 print(f'{self.html_file} - {self.cp.shop_id}: price error - {ex}')
-                pass
 
     def get_status(self):
         cp = self.cp
@@ -109,7 +107,7 @@ class ParserOz(PagesParser):
         # if delivery:
         #     cp.status = delivery.parent.find(text='В наличии')
         #     return
-        add_to_cart = soup.find('div', attrs={"data-widget": "webAddToCart"})
+        add_to_cart = soup.find('div', attrs={"data-widget": "webAddToCart"}).text
         if add_to_cart:
             if 'Добавить в корзину' in add_to_cart.text:
                 cp.status = 'В наличии'
@@ -190,3 +188,9 @@ class ParserWb(PagesParser):
         except Exception as ex:
             cp.rating = -1
             print(f'{self.html_file} - {cp.rosel_id}: rating error - {ex}')
+
+
+class ParserSm(PagesParser):
+    def __init__(self, directory):
+        super().__init__(directory)
+        self.platform = 'sm'

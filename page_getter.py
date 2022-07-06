@@ -70,34 +70,6 @@ class PageGetter(Thread):
         time.sleep(sl_time * 3)
 
 
-class GetterOz(PageGetter):
-    def __init__(self):
-        super().__init__()
-        self.html_dir = f'htmls/{self.date}/oz_html_files/'
-        self.platform = 'oz'
-        self.links = oz_links
-
-    def scroll_down(self):
-        last_height = self.browser.execute_script("return document.body.scrollHeight")
-        self.browser.execute_script(f"window.scrollTo(0, {last_height});")
-        sl_time = 0.5
-        time.sleep(sl_time)
-        for i in range(1, 5):
-            new_height = self.browser.execute_script("return document.body.scrollHeight")
-            self.browser.execute_script(f"window.scrollTo(0, {new_height - 1000 * i});")
-            time.sleep(sl_time * 3)
-        while True:
-            self.browser.execute_script(f"window.scrollTo(0, document.body.scrollHeight);")
-            new_height = self.browser.execute_script("return document.body.scrollHeight")
-            time.sleep(sl_time * 3)
-            if new_height == last_height:
-                break
-            last_height = new_height
-        for i in range(3):
-            time.sleep(sl_time)
-            self.browser.execute_script(f"window.scrollBy(0, {(i + 1) * 1500})")
-
-
 class GetterWb(PageGetter):
     def __init__(self):
         super().__init__()
