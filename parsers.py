@@ -100,10 +100,6 @@ class ParserOz(PagesParser):
     def get_status(self):
         cp = self.cp
         soup = self.soup
-        # delivery = soup.find('h2', text='Информация о доставке')
-        # if delivery:
-        #     cp.status = delivery.parent.find(text='В наличии')
-        #     return
         add_to_cart = soup.find('div', attrs={"data-widget": "webAddToCart"}).text
         if 'Добавить в корзину' in add_to_cart:
             cp.status = 'В наличии'
@@ -171,3 +167,9 @@ class ParserWb(PagesParser):
         except Exception as ex:
             cp.rating = -1
             print(f'{self.html_file} - {cp.rosel_id}: rating error - {ex}')
+
+
+class ParserSm(PagesParser):
+    def __init__(self, directory):
+        super().__init__(directory)
+        self.platform = 'sm'

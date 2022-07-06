@@ -19,3 +19,8 @@ def get_error_files():
 if __name__ == '__main__':
     error_names = get_error_files()
     copy_files(error_names)
+
+'https://www.ozon.ru/api/composer-api.bx/widget/json/v2'
+{"company_id": "09568822-e4af-11e7-9f8d-ac1f6b02225e",
+ "customer_ids": {"cookie": "60b402ce-81ec-4ac0-baa4-b6120b09a1b1"},
+ "current_url": "https://www.ozon.ru/product/fonar-akkumulyatornyy-svetodiodnyy-rekord-rm-0115-165212737/?sh=zJaxPCEHbA"}
