@@ -1,3 +1,10 @@
+from html_getters.get_oz_pages import GetterOz
+from json_getter import OzJsonGetter, WbJsonGetter
+from page_getter import GetterWb, GetterSm
+from parsers import ParserOz, ParserWb, ParserSm
+from utilites import time_track, get_last_dir
+
+
 @time_track
 def get_html_pages():
     global is_run
@@ -21,7 +28,7 @@ def parse_pages():
 @time_track
 def get_json_data():
     json_getters = {'oz': OzJsonGetter, 'wb': WbJsonGetter, 'sm': None}
-    active_platforms = [getter() for name, getter in json_getters.items() if use_platforms[name]]
+    active_platforms = [getter() for name, getter in json_getters.items() if is_run[name]]
     for par in active_platforms:
         par.run()
 
